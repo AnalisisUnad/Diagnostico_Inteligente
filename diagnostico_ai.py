@@ -1,0 +1,79 @@
+# Importar bibliotecas necesarias
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Conjunto de datos extendido: 30 enfermedades con 9 síntomas cada una
+sintomas = [
+    [1, 1, 1, 1, 1, 1, 1, 0, 1],  # 1. Gripe
+    [1, 0, 1, 0, 0, 1, 1, 0, 0],  # 2. Resfriado
+    [0, 0, 1, 0, 0, 1, 1, 0, 0],  # 3. Alergia
+    [1, 1, 0, 1, 1, 0, 0, 1, 1],  # 4. Neumonía
+    [0, 1, 1, 1, 0, 1, 1, 0, 0],  # 5. Sinusitis
+    [1, 1, 1, 1, 1, 0, 0, 1, 0],  # 6. Bronquitis
+    [1, 1, 1, 1, 1, 1, 0, 1, 1],  # 7. COVID-19
+    [0, 1, 0, 1, 0, 1, 0, 0, 0],  # 8. Faringitis
+    [1, 0, 0, 1, 0, 0, 0, 1, 0],  # 9. Asma
+    [1, 1, 0, 1, 1, 0, 0, 1, 1],  # 10. Tuberculosis
+    [1, 0, 1, 1, 1, 1, 1, 1, 0],  # 11. Bronquiectasia
+    [1, 0, 1, 0, 0, 1, 0, 0, 0],  # 12. Laringitis
+    [0, 1, 1, 1, 0, 1, 0, 0, 0],  # 13. Otitis
+    [1, 0, 0, 1, 0, 0, 1, 1, 0],  # 14. EPOC
+    [1, 1, 1, 1, 1, 0, 0, 1, 1],  # 15. Neumonía bacteriana
+    [1, 1, 0, 1, 1, 1, 0, 1, 1],  # 16. Neumonía viral
+    [0, 1, 0, 1, 0, 1, 1, 0, 0],  # 17. Faringoamigdalitis
+    [0, 1, 0, 1, 0, 1, 0, 0, 0],  # 18. Infección de garganta
+    [0, 0, 0, 0, 0, 0, 1, 0, 0],  # 19. Rinitis
+    [0, 1, 1, 0, 0, 1, 1, 0, 0],  # 20. Sinusitis crónica
+    [0, 1, 1, 1, 1, 0, 0, 0, 1],  # 21. Gastroenteritis
+    [1, 1, 1, 1, 1, 1, 0, 0, 1],  # 22. Mononucleosis infecciosa
+    [0, 1, 1, 1, 1, 0, 0, 0, 1],  # 23. Dengue
+    [0, 1, 1, 1, 1, 0, 0, 0, 1],  # 24. Malaria
+    [0, 1, 1, 1, 1, 0, 0, 0, 1],  # 25. Fiebre tifoidea
+    [0, 1, 1, 1, 1, 0, 0, 0, 1],  # 26. Chikungunya
+    [1, 1, 1, 1, 0, 0, 0, 1, 1],  # 27. Meningitis
+    [1, 1, 1, 1, 1, 1, 1, 1, 1],  # 28. Sepsis
+    [1, 1, 1, 1, 1, 0, 0, 1, 1],  # 29. Bronconeumonía
+    [1, 0, 0, 0, 0, 0, 1, 0, 0]   # 30. Infección respiratoria viral
+]
+
+diagnosticos = [
+    "Gripe", "Resfriado", "Alergia", "Neumonía", "Sinusitis",
+    "Bronquitis", "COVID-19", "Faringitis", "Asma", "Tuberculosis",
+    "Bronquiectasia", "Laringitis", "Otitis", "EPOC", "Neumonía bacteriana",
+    "Neumonía viral", "Faringoamigdalitis", "Infección de garganta", "Rinitis",
+    "Sinusitis crónica", "Gastroenteritis", "Mononucleosis infecciosa", "Dengue",
+    "Malaria", "Fiebre tifoidea", "Chikungunya", "Meningitis", "Sepsis",
+    "Bronconeumonía", "Infección respiratoria viral"
+]
+
+# Dividir el conjunto de datos en conjuntos de entrenamiento y prueba
+X_train, X_test, y_train, y_test = train_test_split(sintomas, diagnosticos, test_size=0.2, random_state=42)
+
+# Crear y entrenar el modelo k-NN
+modelo = KNeighborsClassifier(n_neighbors=3)
+modelo.fit(X_train, y_train)
+
+# Probar el modelo en el conjunto de prueba y calcular la precisión
+y_pred = modelo.predict(X_test)
+precision = accuracy_score(y_test, y_pred)
+print(f"Precisión del modelo: {precision * 100:.2f}%")
+
+# Función interactiva para diagnosticar según los síntomas ingresados por el usuario
+def diagnosticar_sintomas():
+    print("Ingrese los síntomas presentes (1 = Sí, 0 = No):")
+    tos = int(input("Tos: "))
+    fiebre = int(input("Fiebre: "))
+    dolor_cabeza = int(input("Dolor de cabeza: "))
+    fatiga = int(input("Fatiga: "))
+    dolor_muscular = int(input("Dolor muscular: "))
+    dolor_garganta = int(input("Dolor de garganta: "))
+    congestion_nasal = int(input("Congestión nasal: "))
+    dificultad_respiratoria = int(input("Dificultad para respirar: "))
+    perdida_apetito = int(input("Pérdida de apetito: "))
+
+    sintomas_usuario = [[tos, fiebre, dolor_cabeza, fatiga, dolor_muscular, dolor_garganta, congestion_nasal, dificultad_respiratoria, perdida_apetito]]
+    diagnostico = modelo.predict(sintomas_usuario)
+    print(f"Diagnóstico sugerido: {diagnostico[0]}")
+
+diagnosticar_sintomas()
